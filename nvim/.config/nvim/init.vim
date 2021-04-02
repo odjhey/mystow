@@ -68,7 +68,7 @@ Plug 'racer-rust/vim-racer'
 "lisp
 Plug 'luochen1990/rainbow'
 Plug 'eraserhd/parinfer-rust', {'do':
-        \  'cargo build --release'}
+      \  'cargo build --release'}
 Plug 'wlangstroth/vim-racket'
 
 "ui
@@ -239,7 +239,7 @@ map <leader><Enter> o<ESC>
 
 " Ag instead of Ack
 if executable('ag')
-    let g:ackprg = 'ag --vimgrep'
+  let g:ackprg = 'ag --vimgrep'
 endif
 
 " min split heights
@@ -249,9 +249,9 @@ set winheight=35
 
 " highlight current line, but only in active window #Stolen from anishathalye
 augroup CursorLineOnlyInActiveWindow
-    autocmd!
-    autocmd VimEnter,WinEnter,BufWinEnter * setlocal cursorline
-    autocmd WinLeave * setlocal nocursorline
+  autocmd!
+  autocmd VimEnter,WinEnter,BufWinEnter * setlocal cursorline
+  autocmd WinLeave * setlocal nocursorline
 augroup END
 
 " Workspace Properties {{{
@@ -290,28 +290,28 @@ set fillchars=vert:▒
 set termguicolors
 
 if has('gui_running')
-    colorscheme solarized
-    "I dont like the default Solarized background
-    hi Normal guibg=#1c1c1c
-    hi Normal guifg=#c9c9c9
-    hi LineNr guibg=#1a1a1a
-    hi LineNr guifg=#c9c9c9
+  colorscheme solarized
+  "I dont like the default Solarized background
+  hi Normal guibg=#1c1c1c
+  hi Normal guifg=#c9c9c9
+  hi LineNr guibg=#1a1a1a
+  hi LineNr guifg=#c9c9c9
 else
-    "colorscheme pablo
-    "colorscheme badwolf
-    let g:gruvbox_contrast_dark = "hard"
-    let g:gruvbox_contrast_soft = "hard"
-    colorscheme gruvbox
+  "colorscheme pablo
+  "colorscheme badwolf
+  let g:gruvbox_contrast_dark = "hard"
+  let g:gruvbox_contrast_soft = "hard"
+  colorscheme gruvbox
 
-    " Color name (:help cterm-colors) or ANSI code
-    let g:limelight_conceal_ctermfg = 'gray'
-    let g:limelight_conceal_ctermfg = 240
+  " Color name (:help cterm-colors) or ANSI code
+  let g:limelight_conceal_ctermfg = 'gray'
+  let g:limelight_conceal_ctermfg = 240
 
-    "colorscheme sift
-    "colorscheme base
-    "colorscheme luna-term
-    "colorscheme spaceduck
-    "let g:airline_theme = 'spaceduck'
+  "colorscheme sift
+  "colorscheme base
+  "colorscheme luna-term
+  "colorscheme spaceduck
+  "let g:airline_theme = 'spaceduck'
 
 endif
 
@@ -344,19 +344,19 @@ nnoremap <leader><CR> <C-^>
 set foldmethod=marker
 "set foldcolumn=2
 function! MyFoldText() " {{{
-    let line = getline(v:foldstart)
+  let line = getline(v:foldstart)
 
-    let nucolwidth = &fdc + &number * &numberwidth
-    let windowwidth = winwidth(0) - nucolwidth - 3
-    let foldedlinecount = v:foldend - v:foldstart
+  let nucolwidth = &fdc + &number * &numberwidth
+  let windowwidth = winwidth(0) - nucolwidth - 3
+  let foldedlinecount = v:foldend - v:foldstart
 
-    " expand tabs into spaces
-    let onetab = strpart('          ', 0, &tabstop)
-    let line = substitute(line, '\t', onetab, 'g')
+  " expand tabs into spaces
+  let onetab = strpart('          ', 0, &tabstop)
+  let line = substitute(line, '\t', onetab, 'g')
 
-    let line = strpart(line, 0, windowwidth - 2 -len(foldedlinecount))
-    let fillcharcount = windowwidth - len(line) - len(foldedlinecount)
-    return line . '…' . repeat("…",fillcharcount) . foldedlinecount . '…' . ' '
+  let line = strpart(line, 0, windowwidth - 2 -len(foldedlinecount))
+  let fillcharcount = windowwidth - len(line) - len(foldedlinecount)
+  return line . '…' . repeat("…",fillcharcount) . foldedlinecount . '…' . ' '
 endfunction " }}}
 set foldtext=MyFoldText()
 "}}}
@@ -369,11 +369,11 @@ set foldtext=MyFoldText()
 " Make sure Vim returns to the same line when you reopen a file. check
 " vimhelp see last-position-jump
 augroup vimrcEx
-    autocmd!
-    autocmd BufReadPost *
-                \ if line("'\"") > 0 && line("'\"") <= line("$") |
-                \     execute 'normal! g`"zvzz' |
-                \ endif
+  autocmd!
+  autocmd BufReadPost *
+        \ if line("'\"") > 0 && line("'\"") <= line("$") |
+        \     execute 'normal! g`"zvzz' |
+        \ endif
 augroup END
 
 " }}}
@@ -391,15 +391,15 @@ set nostartofline
 " Remove smart quotes, etc.
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 function! RemoveFancyCharacters()
-    let typo = {}
-    let typo["“"] = '"'
-    let typo["”"] = '"'
-    let typo["‘"] = "'"
-    let typo["’"] = "'"
-    let typo["–"] = '--'
-    let typo["—"] = '---'
-    let typo["…"] = '...'
-    :exe ":%s/".join(keys(typo),'\|').'/\=typo[submatch(0)]/ge'
+  let typo = {}
+  let typo["“"] = '"'
+  let typo["”"] = '"'
+  let typo["‘"] = "'"
+  let typo["’"] = "'"
+  let typo["–"] = '--'
+  let typo["—"] = '---'
+  let typo["…"] = '...'
+  :exe ":%s/".join(keys(typo),'\|').'/\=typo[submatch(0)]/ge'
 endfunction
 "don't need this for now
 "command! RemoveFancyCharacters :call RemoveFancyCharacters()
@@ -409,12 +409,12 @@ endfunction
 " Indent if we're at the beginning of a line. Else, do completion.
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 function! InsertTabWrapper()
-    let col = col('.') - 1
-    if !col || getline('.')[col - 1] !~ '\k'
-        return "\<tab>"
-    else
-        return "\<c-p>"
-    endif
+  let col = col('.') - 1
+  if !col || getline('.')[col - 1] !~ '\k'
+    return "\<tab>"
+  else
+    return "\<c-p>"
+  endif
 endfunction
 " inoremap <expr> <tab> InsertTabWrapper()
 " inoremap <s-tab> <c-n>
@@ -423,13 +423,13 @@ endfunction
 " RENAME CURRENT FILE
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 function! RenameFile()
-    let old_name = expand('%')
-    let new_name = input('New file name: ', expand('%'), 'file')
-    if new_name != '' && new_name != old_name
-        exec ':saveas ' . new_name
-        exec ':silent !rm ' . old_name
-        redraw!
-    endif
+  let old_name = expand('%')
+  let new_name = input('New file name: ', expand('%'), 'file')
+  if new_name != '' && new_name != old_name
+    exec ':saveas ' . new_name
+    exec ':silent !rm ' . old_name
+    redraw!
+  endif
 endfunction
 map <leader>n :call RenameFile()<cr>
 "}}}
@@ -513,23 +513,23 @@ let g:CommandTFileScanner="git"
 cnoremap %% <C-R>=expand('%:h').'/'<cr>
 
 let g:rbpt_colorpairs = [
-            \ ['brown',       'RoyalBlue3'],
-            \ ['Darkblue',    'SeaGreen3'],
-            \ ['darkgray',    'DarkOrchid3'],
-            \ ['darkgreen',   'firebrick3'],
-            \ ['darkcyan',    'RoyalBlue3'],
-            \ ['darkred',     'SeaGreen3'],
-            \ ['darkmagenta', 'DarkOrchid3'],
-            \ ['brown',       'firebrick3'],
-            \ ['gray',        'RoyalBlue3'],
-            \ ['black',       'SeaGreen3'],
-            \ ['darkmagenta', 'DarkOrchid3'],
-            \ ['Darkblue',    'firebrick3'],
-            \ ['darkgreen',   'RoyalBlue3'],
-            \ ['darkcyan',    'SeaGreen3'],
-            \ ['darkred',     'DarkOrchid3'],
-            \ ['red',         'firebrick3'],
-            \ ]
+      \ ['brown',       'RoyalBlue3'],
+      \ ['Darkblue',    'SeaGreen3'],
+      \ ['darkgray',    'DarkOrchid3'],
+      \ ['darkgreen',   'firebrick3'],
+      \ ['darkcyan',    'RoyalBlue3'],
+      \ ['darkred',     'SeaGreen3'],
+      \ ['darkmagenta', 'DarkOrchid3'],
+      \ ['brown',       'firebrick3'],
+      \ ['gray',        'RoyalBlue3'],
+      \ ['black',       'SeaGreen3'],
+      \ ['darkmagenta', 'DarkOrchid3'],
+      \ ['Darkblue',    'firebrick3'],
+      \ ['darkgreen',   'RoyalBlue3'],
+      \ ['darkcyan',    'SeaGreen3'],
+      \ ['darkred',     'DarkOrchid3'],
+      \ ['red',         'firebrick3'],
+      \ ]
 let g:rbpt_max = 16
 let g:rbpt_loadcmd_toggle = 0
 
@@ -560,9 +560,9 @@ let g:deoplete#enable_at_startup = 1
 
 "ALE
 let g:ale_fixers = {
-            \ 'javascript': ['eslint'],
-            \ 'typescript': ['eslint']
-            \ }
+      \ 'javascript': ['eslint'],
+      \ 'typescript': ['eslint']
+      \ }
 
 let g:ale_sign_error = '❌'
 let g:ale_sign_warning = '⚠️'
@@ -579,30 +579,30 @@ let g:fzf_layout = { 'window': 'call FloatingFZF()' }
 
 " Function to create the custom floating window
 function! FloatingFZF()
-    " creates a scratch, unlisted, new, empty, unnamed buffer
-    " to be used in the floating window
-    let buf = nvim_create_buf(v:false, v:true)
+  " creates a scratch, unlisted, new, empty, unnamed buffer
+  " to be used in the floating window
+  let buf = nvim_create_buf(v:false, v:true)
 
-    " 90% of the height
-    let height = float2nr(&lines * 0.9)
-    " 60% of the height
-    let width = float2nr(&columns * 0.6)
-    " horizontal position (centralized)
-    let horizontal = float2nr((&columns - width) / 2)
-    " vertical position (one line down of the top)
-    let vertical = 1
+  " 90% of the height
+  let height = float2nr(&lines * 0.9)
+  " 60% of the height
+  let width = float2nr(&columns * 0.6)
+  " horizontal position (centralized)
+  let horizontal = float2nr((&columns - width) / 2)
+  " vertical position (one line down of the top)
+  let vertical = 1
 
-    let opts = {
-                \ 'relative': 'editor',
-                \ 'row': vertical,
-                \ 'col': horizontal,
-                \ 'width': width,
-                \ 'height': height,
-                \ 'style' : 'minimal'
-                \ }
+  let opts = {
+        \ 'relative': 'editor',
+        \ 'row': vertical,
+        \ 'col': horizontal,
+        \ 'width': width,
+        \ 'height': height,
+        \ 'style' : 'minimal'
+        \ }
 
-    " open the new window, floating, and enter to it
-    call nvim_open_win(buf, v:true, opts)
+  " open the new window, floating, and enter to it
+  call nvim_open_win(buf, v:true, opts)
 endfunction
 
 " Easymotion
@@ -631,12 +631,12 @@ au FileType rust nmap <leader>gd <Plug>(rust-doc)
 nnoremap <LocalLeader>e :edit <C-R>=expand('%:p:h') . '/'<CR>
 
 if &diff
-colorscheme gruvbox
-set signcolumn=
-"set nolist
-set diffexpr=""
-set diffopt+=iwhiteall
-set diffopt+=icase
+  colorscheme gruvbox
+  set signcolumn=
+  "set nolist
+  set diffexpr=""
+  set diffopt+=iwhiteall
+  set diffopt+=icase
 endif
 
 
@@ -674,12 +674,12 @@ let g:netrw_winsize = 20
 "augroup END
 
 augroup Racer
-    autocmd!
-    autocmd FileType rust nmap <buffer> gd         <Plug>(rust-def)
-    autocmd FileType rust nmap <buffer> gs         <Plug>(rust-def-split)
-    autocmd FileType rust nmap <buffer> gx         <Plug>(rust-def-vertical)
-    autocmd FileType rust nmap <buffer> gt         <Plug>(rust-def-tab)
-    autocmd FileType rust nmap <buffer> <leader>gd <Plug>(rust-doc)
+  autocmd!
+  autocmd FileType rust nmap <buffer> gd         <Plug>(rust-def)
+  autocmd FileType rust nmap <buffer> gs         <Plug>(rust-def-split)
+  autocmd FileType rust nmap <buffer> gx         <Plug>(rust-def-vertical)
+  autocmd FileType rust nmap <buffer> gt         <Plug>(rust-def-tab)
+  autocmd FileType rust nmap <buffer> <leader>gd <Plug>(rust-doc)
 augroup END
 
 "augroup javascript_folding
@@ -698,6 +698,6 @@ au BufRead,BufNewFile *.fnl setfiletype lisp
 
 let g:rainbow_active = 1
 let g:rainbow_conf = { 
-\ 'ctermfgs': ['white', 'red', 'darkcyan', 'lightred', 'lightblue', 
-\              'lightmagenta', 'lightgreen', 'lightyellow', 'lightcyan'] 
-\}
+      \ 'ctermfgs': ['white', 'red', 'darkcyan', 'lightred', 'lightblue', 
+      \              'lightmagenta', 'lightgreen', 'lightyellow', 'lightcyan'] 
+      \}
