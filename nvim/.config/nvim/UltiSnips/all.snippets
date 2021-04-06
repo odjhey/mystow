@@ -1,0 +1,13 @@
+snippet -> "new flow"
+${1:A}->>${2:B}: ${3:desc}
+activate $2
+  $0
+$2-->>$1: ${4:done}
+deactivate $2
+endsnippet
+
+snippet ->+ "new flow"
+${1:A}->>+${2:B}: ${3:desc}
+$2-->>-$1: ${4:done}
+$0
+endsnippet

@@ -1,8 +1,5 @@
 set nocompatible
 
-"FZF
-set rtp+=/usr/local/opt/fzf
-
 call plug#begin('~/.local/share/nvim/plugged')
 "syntax js
 Plug 'pangloss/vim-javascript'
@@ -14,10 +11,7 @@ Plug 'peitalin/vim-jsx-typescript' "syntax highlight
 Plug 'leafgarland/typescript-vim'
 
 "syntax gql
-"Plug 'jparise/vim-graphql'
-
-"ui
-Plug 'gruvbox-community/gruvbox' "Plug 'morhetz/gruvbox'
+Plug 'jparise/vim-graphql'
 
 "keys
 Plug 'tpope/vim-surround'
@@ -27,7 +21,10 @@ Plug 'mattn/emmet-vim'
 Plug 'easymotion/vim-easymotion'
 Plug 'tpope/vim-vinegar'
 Plug 'tpope/vim-rsi'
+
 Plug 'unblevable/quick-scope'
+
+Plug 'chrisbra/Colorizer'
 
 "git
 Plug 'tpope/vim-fugitive'
@@ -37,7 +34,7 @@ Plug 'tpope/vim-fugitive'
 " Plug 'w0rp/ale'
 " like gitgutter
 
-"Plug 'mhinz/vim-signify' - try gitgutter for quickfix features
+"Plug 'mhinz/vim-signify' - try gitgutter for now, for quickfix features
 Plug 'airblade/vim-gitgutter'
 
 "Plug 'mhartington/nvim-typescript', {'do': './install.sh'} "error, some
@@ -47,17 +44,25 @@ Plug 'airblade/vim-gitgutter'
 " For Denite features
 " Plug 'Shougo/denite.nvim'
 
+"ui
+Plug 'gruvbox-community/gruvbox' "Plug 'morhetz/gruvbox'
+Plug 'artanikin/vim-synthwave84'
+Plug 'pineapplegiant/spaceduck'
+Plug 'glepnir/oceanic-material'
+
+
 "formatters
 Plug 'editorconfig/editorconfig-vim'
 Plug 'prettier/vim-prettier'
 
+"Plug '/usr/local/opt/fzf'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 
-"Plug 'SirVer/ultisnips'
+Plug 'SirVer/ultisnips'
 "Plug 'ycm-core/YouCompleteMe'
 "Plug 'honza/vim-snippets'
 
@@ -65,26 +70,29 @@ Plug 'vim-airline/vim-airline-themes'
 Plug 'rust-lang/rust.vim'
 Plug 'racer-rust/vim-racer'
 
-"lisp
-Plug 'luochen1990/rainbow'
-Plug 'eraserhd/parinfer-rust', {'do':
-      \  'cargo build --release'}
-Plug 'wlangstroth/vim-racket'
+"go
+Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries'}
 
-"ui
-"Plug 'pineapplegiant/spaceduck', { 'branch': 'main' }
-Plug 'rrethy/vim-hexokinase', { 'do': 'make hexokinase' }
+Plug 'neoclide/coc.nvim', {'branch': 'master', 'do': 'yarn install --frozen-lockfile'}
+Plug 'aquach/vim-http-client'
+
+Plug 'nicwest/vim-http'
+
+"Using fzf custom filters for now
+"Plug 'tpope/vim-projectionist'
+
+"Plug 'christoomey/vim-tmux-navigator'
 
 Plug 'junegunn/goyo.vim' "Distraction free
 Plug 'junegunn/limelight.vim' "color free
-Plug 'junegunn/vim-peekaboo' "visual cue for registers
+
+Plug 'junegunn/vim-peekaboo'
 
 Plug 'junegunn/seoul256.vim'
-
 Plug 'guns/vim-sexp'
 Plug 'tpope/vim-sexp-mappings-for-regular-people'
 
-"Plug 'leafo/moonscript-vim'
+Plug 'leafo/moonscript-vim'
 
 Plug 'mbbill/undotree'
 
@@ -92,9 +100,29 @@ Plug 'mbbill/undotree'
 Plug 'previm/previm'
 Plug 'tyru/open-browser.vim'
 
-Plug 'artanikin/vim-synthwave84'
+"Text Objs : github/kana you rock!
+Plug 'terryma/vim-expand-region'
+Plug 'kana/vim-textobj-user'
+Plug 'kana/vim-textobj-line'
+Plug 'kana/vim-textobj-function'
+Plug 'thinca/vim-textobj-function-javascript'
 
+"Vertical movement solution, try for now
+Plug 'justinmk/vim-sneak'
+
+"Vertical jump, reread this, might need to fork
+Plug 'inkarkat/vim-ingo-library'
+Plug 'inkarkat/vim-CountJump'
+Plug 'inkarkat/vim-JumpToVerticalOccurrence'
+
+Plug 'moll/vim-bbye'
 call plug#end()
+
+set termguicolors
+
+"set signcolumn=yes:2
+
+set background=dark
 
 set mouse=a
 
@@ -109,16 +137,19 @@ syntax on
 filetype plugin indent on
 
 "set autoindent " follow indent of previous line
-set scrolloff=5
 set incsearch
 set hlsearch
 set ignorecase smartcase " make searches case-sensitive only if they contain upper-case characters
 set title " show filename on titlebar
 
+set scrolloff=5
+au TermEnter * setlocal scrolloff=0
+au TermLeave * setlocal scrolloff=5
+
 "" unhighlight on Enter
 "nnoremap <CR> :nohlsearch<CR> 
-" Repeat last macro if in a normal buffer. Thanks @wincent
-nnoremap <expr> <CR> empty(&buftype) ? '@@' : '<CR>'
+"Repeat last macro if in a normal buffer. Thanks @wincent
+"nnoremap <expr> <CR> empty(&buftype) ? '@@' : '<CR>'
 noremap <silent> <Up> :cprevious<CR>
 nnoremap <silent> <Down> :cnext<CR>
 nnoremap <silent> <Left> :cpfile<CR>
@@ -127,10 +158,10 @@ nnoremap <silent> <Right> :cnfile<CR>
 nnoremap <expr> k (v:count > 5 ? "m'" . v:count : '') . 'k'
 nnoremap <expr> j (v:count > 5 ? "m'" . v:count : '') . 'j'
 
-nnoremap <Leader>o :only<CR>
-nnoremap <Leader>w :write<CR>
-nnoremap <Leader>x :xit<CR>
-nnoremap <Leader>q :quit<CR>
+" nnoremap <Leader>o :only<CR>
+" nnoremap <Leader>w :write<CR>
+" nnoremap <Leader>x :xit<CR>
+" nnoremap <Leader>q :quit<CR>
 
 " Cycle through relativenumber + number, number (only), and no numbering.
 function! Cycle_numbering() abort
@@ -141,7 +172,7 @@ function! Cycle_numbering() abort
           \ '10': 'set norelativenumber | set nonumber',
           \ '11': 'set norelativenumber | set number' }[&number . &relativenumber]
   else
-    " No relative numbering, just toggle numbers on and off.
+    " No relative numbering, just toggle eumbers on and off.
     set number!
   endif
 endfunction
@@ -155,6 +186,8 @@ set showmatch
 " LOL got these from TPOPE - QoL
 nnoremap Y  y$
 inoremap <C-C> <Esc>`^
+
+xmap <Leader>y "*y :let @+=@*<cr>
 
 " Navigation
 " Speed up viewport scrolling
@@ -170,15 +203,16 @@ nnoremap <C-y> 4<C-y>
 " -*- vim -*- vim:set ft=vim et sw=2 sts=2:
 inoremap <C-X>^ <C-R>=substitute(&commentstring,' \=%s\>'," -*- ".&ft." -*- vim:set ft=".&ft." ".(&et?"et":"noet")." sw=".&sw." sts=".&sts.':','')<CR>
 
-inoremap <M-0>      <C-O>0
-cnoremap <C-O>      <Up>
-inoremap <M-o>      <C-O>o
-inoremap <M-O>      <C-O>O
-inoremap <M-i>      <Left>
-inoremap <M-I>      <C-O>^
-inoremap <M-A>      <C-O>$
-noremap! <C-J>      <Down>
-noremap! <C-K><C-K> <Up>
+"inoremap <M-0>      <C-O>0
+"cnoremap <C-O>      <Up>
+"inoremap <M-o>      <C-O>o
+"inoremap <M-O>      <C-O>O
+"inoremap <M-i>      <Left>
+"inoremap <M-I>      <C-O>^
+"inoremap <M-A>      <C-O>$
+"noremap! <C-J>      <Down>
+"noremap! <C-K><C-K> <Up>
+imap <C-K> <nop>
 
 " remove backups forever
 set nobackup
@@ -187,6 +221,20 @@ set backupdir=~/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
 set directory=~/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
 set backupskip+=/safe/*
 set directory=~/.vim/swaps     " Set directory for swap files.
+
+" Use persistent history.
+if !isdirectory("/tmp/.vim-undo-dir")
+  call mkdir("/tmp/.vim-undo-dir", "", 0700)
+endif
+set undodir=/tmp/.vim-undo-dir
+set undofile
+
+"" Use persistent history.
+"if !isdirectory("~/.vim/.vim-undo-dir")
+"    call mkdir("~/.vim/.vim-undo-dir", "", 0700)
+"endif
+"set undodir=~/.vim/.vim-undo-dir
+"set undofile
 
 set showcmd
 set noshowmode "don't show mode, cause airline
@@ -210,24 +258,27 @@ nnoremap <c-h> <c-w>h
 nnoremap <c-l> <c-w>l
 
 " FZF {{{
-nnoremap <c-t> :FZF<CR>
+"nnoremap <c-t> :FZF<CR>
+nnoremap <c-t> :GFiles<CR>
 imap <c-x><c-f> <plug>(fzf-complete-path)
 imap <c-x><c-l> <plug>(fzf-complete-line)
 nnoremap <c-f> :Buffer<CR>
 nnoremap <c-s> :BLines<CR>
+nnoremap <c-q> :GFiles?<CR>
 "}}}
 
 "insert new line
-map <leader><Enter> o<ESC> 
+"map <leader><Enter> o<ESC> 
 
 " Ag instead of Ack
 if executable('ag')
   let g:ackprg = 'ag --vimgrep'
 endif
 
-" min split heights
-set winheight=35
-:silent! set winminheight=5
+" Please fix later, breaks quickfix preview of coc
+" " min split heights
+" set winheight=35
+" :silent! set winminheight=5
 
 
 " highlight current line, but only in active window #Stolen from anishathalye
@@ -270,8 +321,6 @@ set fillchars=vert:▒
 "  set guifont=Consolas:h10
 "endif
 
-set termguicolors
-
 if has('gui_running')
   colorscheme solarized
   "I dont like the default Solarized background
@@ -282,20 +331,27 @@ if has('gui_running')
 else
   "colorscheme pablo
   "colorscheme badwolf
+  "
+  let g:gruvbox_italic=1
   let g:gruvbox_contrast_dark = "hard"
   let g:gruvbox_contrast_soft = "hard"
+  let g:gruvbox_italicize_strings = 0
+  let g:gruvbox_italicize_comments = 0
+  let g:gruvbox_invert_selection = 0
+  " let g:gruvbox_improved_strings = 1
+  " let g:gruvbox_improved_comments = 1
   colorscheme gruvbox
 
   " Color name (:help cterm-colors) or ANSI code
   let g:limelight_conceal_ctermfg = 'gray'
   let g:limelight_conceal_ctermfg = 240
 
+  let g:oceanic_material_background="darker"
+  "colorscheme oceanic_material
+
   "colorscheme sift
   "colorscheme base
   "colorscheme luna-term
-  "colorscheme spaceduck
-  "let g:airline_theme = 'spaceduck'
-
 endif
 
 "always show filename above status bar
@@ -414,7 +470,7 @@ function! RenameFile()
     redraw!
   endif
 endfunction
-map <leader>n :call RenameFile()<cr>
+"map <leader>n :call RenameFile()<cr> "not using
 "}}}
 "add split line
 "CTags
@@ -467,7 +523,6 @@ set concealcursor=nvic
 "syntax keyword function function conceal cchar=λ
 "syntax keyword vartest var conceal cchar=#
 
-
 "let g:scroll_position_auto_enable=0
 let g:scroll_position_marker = '⇒' 
 "hi SignColumn           ctermbg=232 
@@ -479,20 +534,20 @@ let g:CommandTFileScanner="git"
 
 "let g:syntastic_javascript_checkers = ['eslint']
 
-
-" "Powerline is deprecated, use lightline
-" "let g:Powerline_symbols = 'fancy'
-" "let g:Powerline_colorscheme = 'solarized256'
-" let g:lightline = {
-"             \ 'colorscheme': 'gruvbox',
-"             \ '': {
-"             \   'left': [['mode', 'paste'], 
-"             \            ['readonly', 'filename', 'modified']]
-"             \ },
-"             \ }
+"Powerline is deprecated, use lightline
+"let g:Powerline_symbols = 'fancy'
+"let g:Powerline_colorscheme = 'solarized256'
+let g:lightline = {
+      \ 'colorscheme': 'gruvbox',
+      \ '': {
+      \   'left': [['mode', 'paste'], 
+      \            ['readonly', 'filename', 'modified']]
+      \ },
+      \ }
 
 
 " october 2017
+" auto fill current dir in c
 cnoremap %% <C-R>=expand('%:h').'/'<cr>
 
 let g:rbpt_colorpairs = [
@@ -535,30 +590,28 @@ let g:surround_{char2nr('^')} = "/^\r$/"
 packadd! matchit
 
 " Trigger configuration. Do not use <tab> if you use https://github.com/Valloric/YouCompleteMe.
-"let g:UltiSnipsExpandTrigger="<tab>"
-"let g:UltiSnipsJumpForwardTrigger="<tab>"
-"let g:UltiSnipsEditSplit="vertical"
+let g:UltiSnipsExpandTrigger="<tab>"
+let g:UltiSnipsJumpForwardTrigger="<tab>"
+let g:UltiSnipsEditSplit="vertical"
 
-let g:deoplete#enable_at_startup = 1
+"let g:deoplete#enable_at_startup = 1
 
-"ALE
-let g:ale_fixers = {
-      \ 'javascript': ['eslint'],
-      \ 'typescript': ['eslint']
-      \ }
-
-let g:ale_sign_error = '❌'
-let g:ale_sign_warning = '⚠️'
-
-let g:ale_fix_on_save = 1
-
-
+""ALE
+"let g:ale_fixers = {
+"            \ 'javascript': ['eslint'],
+"            \ 'typescript': ['eslint']
+"            \ }
+"
+"let g:ale_sign_error = '❌'
+"let g:ale_sign_warning = '⚠️'
+"
+"let g:ale_fix_on_save = 1
 
 " Reverse the layout to make the FZF list top-down
 let $FZF_DEFAULT_OPTS='--layout=reverse'
 
 " Using the custom window creation function
-let g:fzf_layout = { 'window': 'call FloatingFZF()' }
+"let g:fzf_layout = { 'window': 'call FloatingFZF()' }
 
 " Function to create the custom floating window
 function! FloatingFZF()
@@ -592,10 +645,22 @@ endfunction
 "let g:EasyMotion_do_mapping = 0 " Disable default mappings
 "do :h easymotion you dummy
 "let g:EasyMotion_smartcase = 1
+nmap <Leader>j <Plug>(easymotion-j)
+nmap <Leader>k <Plug>(easymotion-k)
 
-let g:python3_host_prog='/usr/local/opt/python/libexec/bin/python'
+
+"let g:python3_host_prog='/usr/local/opt/python/libexec/bin/python'
+let g:python3_host_prog='/usr/bin/python3'
 
 let g:airline_powerline_fonts = 1
+"let g:airline#extensions#tabline#enabled = 1
+let g:airline_theme='base16_gruvbox_dark_hard'
+"let g:airline_theme='wombat'
+"let g:airline_theme='luna'
+"let g:airline_theme='molokai'
+"let g:airline_theme='distinguished'
+"let g:airline_theme='tomorrow'
+"let g:airline_theme='zenburn'
 
 " Does not work in NeoVim
 " https://github.com/powerline/powerline/issues/1287
@@ -641,14 +706,26 @@ hi DiffText   cterm=NONE ctermbg=58 ctermfg=NONE guibg=Grey40
 "hi ALEWarning cterm=underline ctermfg=yellow
 "hi ALEWarningSign cterm=underline ctermfg=yellow
 
-
-
-
+" vim-expand-region
+let g:expand_region_text_objects = {
+      \ 'iw'  :0,
+      \ 'iW'  :0,
+      \ 'i"'  :0,
+      \ 'i''' :0,
+      \ 'i]'  :1,
+      \ 'ib'  :1,
+      \ 'iB'  :1,
+      \ 'il'  :1,
+      \ 'ip'  :1,
+      \ 'ie'  :0,
+      \ }
+vmap v <Plug>(expand_region_expand)
+vmap <C-v> <Plug>(expand_region_shrink)
 
 
 "let g:netrw_banner = 0
 let g:netrw_liststyle = 3
-"let g:netrw_browse_split = 4
+"let g:netrw_browse_split = 4 "disable use tpopes vim-vinegar
 let g:netrw_altv = 1
 let g:netrw_winsize = 20
 "augroup ProjectDrawer
@@ -665,11 +742,120 @@ augroup Racer
   autocmd FileType rust nmap <buffer> <leader>gd <Plug>(rust-doc)
 augroup END
 
+
 "augroup javascript_folding
 "    au!
 "    au FileType javascript setlocal autoindent=off
 "    au FileType javascript setlocal foldmethod=syntax
 "augroup END
+
+" COC
+if has('nvim') 
+  inoremap <silent><expr> <c-space> coc#refresh()
+else
+  inoremap <silent><expr> <c-@> coc#refresh()
+endif
+
+" Make <CR> auto-select the first completion item and notify coc.nvim to
+" format on enter, <cr> could be remapped by other vim plugin
+inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm()
+      \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gr <Plug>(coc-references)
+" nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> <leader>gi <Plug>(coc-implementation)
+
+" Use K to show documentation in preview window.
+noremap <silent> K :call <SID>show_documentation()<CR>
+nnoremap <silent> <c-.> :call CocActionAsync('doHover')<CR>
+
+function! s:show_documentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
+  elseif (coc#rpc#ready())
+    call CocActionAsync('doHover')
+  else
+    execute '!' . &keywordprg . " " . expand('<cword>')
+  endif
+endfunction
+
+" Symbol renaming.
+nmap <LocalLeader>rn <Plug>(coc-rename)
+
+let g:coc_global_extensions = ['coc-tsserver']
+
+if isdirectory('./node_modules') && isdirectory('./node_modules/prettier')
+  let g:coc_global_extensions += ['coc-prettier']
+endif
+
+if isdirectory('./node_modules') && isdirectory('./node_modules/eslint')
+  let g:coc_global_extensions += ['coc-eslint']
+endif
+
+" nnoremap <silent> <space>s :<C-u>CocList -I symbols<cr>
+" nnoremap <silent> <space>d :<C-u>CocList --auto-preview --tab --normal diagnostics<cr>
+nnoremap <silent> <space>d :<C-u>CocList --auto-preview --normal diagnostics<cr>
+
+" Add `:Fold` command to fold current buffer.
+command! -nargs=? Fold :call     CocAction('fold', <f-args>)
+
+autocmd FocusGained * silent! checktime
+
+" If doing a diff. Upon writing changes to file, automatically update the
+" differences
+autocmd BufWritePost * if &diff == 1 | diffupdate | endif
+
+if ! exists("g:CheckUpdateStarted")
+  let g:CheckUpdateStarted=1
+  call timer_start(1,'CheckUpdate')
+endif
+function! CheckUpdate(timer)
+  silent! checktime
+  call timer_start(1000,'CheckUpdate')
+endfunction
+
+command! -bang At call fzf#vim#files('test', <bang>0)
+command! -bang As call fzf#vim#files('src', <bang>0)
+function! RipgrepFzf(query, fullscreen)
+  let command_fmt = 'rg --column --line-number --no-heading --color=always --smart-case -- %s || true'
+  let initial_command = printf(command_fmt, shellescape(a:query))
+  let reload_command = printf(command_fmt, '{q}')
+  let spec = {'options': ['--phony', '--query', a:query, '--bind', 'change:reload:'.reload_command]}
+  call fzf#vim#grep(initial_command, 1, fzf#vim#with_preview(spec), a:fullscreen)
+endfunction
+
+function! RipgrepFzfDir(query, fullscreen, dir)
+  let command_fmt = 'rg --column --line-number --no-heading --color=always --smart-case -- %s || true'
+  let initial_command = printf(command_fmt, shellescape(a:query))
+  let reload_command = printf(command_fmt, '{q}')
+  let spec = {'options': ['--phony', '--query', a:query, '--bind', 'change:reload:'.reload_command], 'dir': a:dir}
+  call fzf#vim#grep(initial_command, 1, fzf#vim#with_preview(spec), a:fullscreen)
+endfunction
+
+command! -nargs=* -bang RG call RipgrepFzf(expand('<cword>'), <bang>0)
+command! -nargs=* -bang RG2T call RipgrepFzfDir(expand('<cword>'), <bang>0, 'test')
+command! -nargs=* -bang RG2S call RipgrepFzfDir(expand('<cword>'), <bang>0, 'src')
+
+command! -bang -nargs=* PRg
+  \ call fzf#vim#grep("rg --column --line-number --no-heading --color=always --smart-case ".shellescape(<q-args>), 1, {'dir': system('git rev-parse --show-toplevel 2> /dev/null')[:-2]}, <bang>0)
+command! -bang -nargs=* PTRg
+  \ call fzf#vim#grep("rg --column --line-number --no-heading --color=always --smart-case ".shellescape(<q-args>), 1, {'dir': 'test'}, <bang>0)
+command! -bang -nargs=* PSRg
+  \ call fzf#vim#grep("rg --column --line-number --no-heading --color=always --smart-case ".shellescape(<q-args>), 1, {'dir': 'src'}, <bang>0)
+
+" t:test s:src v:vsplit w:rg
+nnoremap <LocalLeader>t :At<CR>
+nnoremap <LocalLeader>s :As<CR>
+nnoremap <LocalLeader>v :vs#<CR>
+nnoremap <LocalLeader>ww :RG<CR>
+nnoremap <LocalLeader>ws :RG2S<CR>
+nnoremap <LocalLeader>wt :RG2T<CR>
+nnoremap <LocalLeader>8 :RG<CR>
+
+" vim-bbye
+nnoremap <LocalLeader>q :Bdelete<CR>
 
 " Trigger a highlight in the appropriate direction when pressing these keys:
 let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
@@ -677,10 +863,102 @@ let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
 highlight QuickScopePrimary guifg='#afff5f' gui=underline ctermfg=205 cterm=underline
 highlight QuickScopeSecondary guifg='#5fffff' gui=underline ctermfg=81 cterm=underline
 
+
+
 au BufRead,BufNewFile *.fnl setfiletype lisp
 
-let g:rainbow_active = 1
-let g:rainbow_conf = { 
-      \ 'ctermfgs': ['white', 'red', 'darkcyan', 'lightred', 'lightblue', 
-      \              'lightmagenta', 'lightgreen', 'lightyellow', 'lightcyan'] 
-      \}
+
+" XML formatter
+function! DoFormatXML() range
+  " Save the file type
+  let l:origft = &ft
+  " Clean the file type
+  set ft=
+  " Add fake initial tag (so we can process multiple top-level elements)
+  exe ":let l:beforeFirstLine=" . a:firstline . "-1"
+  if l:beforeFirstLine < 0
+    let l:beforeFirstLine=0
+  endif
+  exe a:lastline . "put ='</PrettyXML>'"
+  exe l:beforeFirstLine . "put ='<PrettyXML>'"
+  exe ":let l:newLastLine=" . a:lastline . "+2"
+  if l:newLastLine > line('$')
+    let l:newLastLine=line('$')
+  endif
+  " Remove XML header
+  exe ":" . a:firstline . "," . a:lastline . "s/<\?xml\\_.*\?>\\_s*//e"
+  " Recalculate last line of the edited code
+  let l:newLastLine=search('</PrettyXML>')
+  " Execute external formatter
+  exe ":silent " . a:firstline . "," . l:newLastLine . "!xmllint --noblanks --format --recover -"
+  " Recalculate first and last lines of the edited code
+  let l:newFirstLine=search('<PrettyXML>')
+  let l:newLastLine=search('</PrettyXML>')
+  " Get inner range
+  let l:innerFirstLine=l:newFirstLine+1
+  let l:innerLastLine=l:newLastLine-1
+  " Remove extra unnecessary indentation
+  exe ":silent " . l:innerFirstLine . "," . l:innerLastLine "s/^  //e"
+  " Remove fake tag
+  exe l:newLastLine . "d"
+  exe l:newFirstLine . "d"
+  " Put the cursor at the first line of the edited code
+  exe ":" . l:newFirstLine
+  " Restore the file type
+  exe "set ft=" . l:origft
+endfunction
+command! -range=% FormatXML <line1>,<line2>call DoFormatXML()
+
+" sneak
+" 2-character Sneak (default)
+nmap <Leader>s <Plug>Sneak_s
+nmap <Leader>S <Plug>Sneak_S
+" visual-mode
+xmap <Leader>s <Plug>Sneak_s
+xmap <Leader>S <Plug>Sneak_S
+" operator-pending-mode
+omap <Leader>s <Plug>Sneak_s
+omap <Leader>S <Plug>Sneak_S
+
+" vertical movement through whitespace
+" ...h/t WChargin http://vi.stackexchange.com/a/156/67
+function! VerticalSpaceJumpUp()
+  while line(".") > 1 && (strlen(getline(".")) < col(".") || getline(".")[col(".") - 1] =~ '\s')
+    norm k
+  endwhile
+endfunction
+function! VerticalSpaceJumpDown()
+  while line(".") > 1 && (strlen(getline(".")) < col(".") || getline(".")[col(".") - 1] =~ '\s')
+    norm j
+  endwhile
+endfunction
+
+" gk/gj : vertical movement through whitespace
+" nnoremap gk :call VerticalSpaceJumpUp()<CR>
+" nnoremap gj :call VerticalSpaceJumpDown()<CR>
+
+nmap <c-j> }
+nmap <c-k> {
+
+nmap <M-x> :
+nmap <leader>gn <Plug>(GitGutterNextHunk)
+nmap <leader>gp <Plug>(GitGutterPrevHunk)
+
+function ToggleColorscheme()
+  if (g:colors_name == "gruvbox")
+    colorscheme oceanic_material
+    AirlineTheme zenburn
+  else
+    "" toggling messes with gruvbox lol
+    "" try to fix later
+    "colorscheme gruvbox
+    "AirlineTheme base16_gruvbox_dark_hard
+  endif
+endfunction
+nnoremap yot :call ToggleColorscheme()<CR>
+
+
+" Wow, just wow! Using :terminal now eh?
+tnoremap <Esc> <C-\><C-n>
+
+

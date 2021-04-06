@@ -1,0 +1,65 @@
+snippet req "require"
+const $1 = require("$0")
+endsnippet
+
+snippet arfn "arrow fn"
+($1) => {
+  return $0
+}
+endsnippet
+
+snippet aarfn "async arr fn"
+async ($1) => {
+  return $0
+}
+endsnippet
+
+snippet fn "function"
+const ${1:name} = (${2:param}) => {
+	${0:body}
+}
+endsnippet
+
+snippet afn "async function"
+const ${1:name} = async (${2}) => {
+	${0:body}
+}
+endsnippet
+
+snippet cl "console log"
+console.log($0, "$1")
+endsnippet
+
+snippet it "it"
+it("${1:should}", $2() => {
+  //arrange
+  const given = {}
+  //act
+  $0
+  //assert
+  expect(false).to.be.true
+})
+endsnippet
+
+snippet ita "async it"
+it("${1:should}", async () => {
+  //arrange
+  const given = {}
+  //act
+  $0
+  //assert
+  expect(false).to.be.true
+})
+endsnippet
+
+snippet desc "describe verbose"
+describe('${1:`!p snip.rv = fn.split(os.extsep)[0]`}', ${2:async}() => {
+	$0
+});
+endsnippet
+
+snippet cafn "call fn"
+${1:fn}(() => {
+	$0
+})
+endsnippet
