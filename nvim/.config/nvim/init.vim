@@ -114,6 +114,8 @@ Plug 'justinmk/vim-sneak'
 Plug 'inkarkat/vim-ingo-library'
 Plug 'inkarkat/vim-CountJump'
 Plug 'inkarkat/vim-JumpToVerticalOccurrence'
+
+Plug 'moll/vim-bbye'
 call plug#end()
 
 set termguicolors
@@ -135,11 +137,14 @@ syntax on
 filetype plugin indent on
 
 "set autoindent " follow indent of previous line
-set scrolloff=5
 set incsearch
 set hlsearch
 set ignorecase smartcase " make searches case-sensitive only if they contain upper-case characters
 set title " show filename on titlebar
+
+set scrolloff=5
+au TermEnter * setlocal scrolloff=0
+au TermLeave * setlocal scrolloff=5
 
 "" unhighlight on Enter
 "nnoremap <CR> :nohlsearch<CR> 
@@ -606,7 +611,7 @@ let g:UltiSnipsEditSplit="vertical"
 let $FZF_DEFAULT_OPTS='--layout=reverse'
 
 " Using the custom window creation function
-let g:fzf_layout = { 'window': 'call FloatingFZF()' }
+"let g:fzf_layout = { 'window': 'call FloatingFZF()' }
 
 " Function to create the custom floating window
 function! FloatingFZF()
@@ -648,6 +653,7 @@ nmap <Leader>k <Plug>(easymotion-k)
 let g:python3_host_prog='/usr/bin/python3'
 
 let g:airline_powerline_fonts = 1
+"let g:airline#extensions#tabline#enabled = 1
 let g:airline_theme='base16_gruvbox_dark_hard'
 "let g:airline_theme='wombat'
 "let g:airline_theme='luna'
@@ -820,15 +826,36 @@ function! RipgrepFzf(query, fullscreen)
   call fzf#vim#grep(initial_command, 1, fzf#vim#with_preview(spec), a:fullscreen)
 endfunction
 
-command! -nargs=* -bang RG call RipgrepFzf(<q-args>, <bang>0)
+function! RipgrepFzfDir(query, fullscreen, dir)
+  let command_fmt = 'rg --column --line-number --no-heading --color=always --smart-case -- %s || true'
+  let initial_command = printf(command_fmt, shellescape(a:query))
+  let reload_command = printf(command_fmt, '{q}')
+  let spec = {'options': ['--phony', '--query', a:query, '--bind', 'change:reload:'.reload_command], 'dir': a:dir}
+  call fzf#vim#grep(initial_command, 1, fzf#vim#with_preview(spec), a:fullscreen)
+endfunction
 
+command! -nargs=* -bang RG call RipgrepFzf(expand('<cword>'), <bang>0)
+command! -nargs=* -bang RG2T call RipgrepFzfDir(expand('<cword>'), <bang>0, 'test')
+command! -nargs=* -bang RG2S call RipgrepFzfDir(expand('<cword>'), <bang>0, 'src')
+
+command! -bang -nargs=* PRg
+  \ call fzf#vim#grep("rg --column --line-number --no-heading --color=always --smart-case ".shellescape(<q-args>), 1, {'dir': system('git rev-parse --show-toplevel 2> /dev/null')[:-2]}, <bang>0)
+command! -bang -nargs=* PTRg
+  \ call fzf#vim#grep("rg --column --line-number --no-heading --color=always --smart-case ".shellescape(<q-args>), 1, {'dir': 'test'}, <bang>0)
+command! -bang -nargs=* PSRg
+  \ call fzf#vim#grep("rg --column --line-number --no-heading --color=always --smart-case ".shellescape(<q-args>), 1, {'dir': 'src'}, <bang>0)
+
+" t:test s:src v:vsplit w:rg
 nnoremap <LocalLeader>t :At<CR>
 nnoremap <LocalLeader>s :As<CR>
 nnoremap <LocalLeader>v :vs#<CR>
-nnoremap <LocalLeader>w :Ss<CR>
+nnoremap <LocalLeader>ww :RG<CR>
+nnoremap <LocalLeader>ws :RG2S<CR>
+nnoremap <LocalLeader>wt :RG2T<CR>
+nnoremap <LocalLeader>8 :RG<CR>
 
-
-
+" vim-bbye
+nnoremap <LocalLeader>q :Bdelete<CR>
 
 " Trigger a highlight in the appropriate direction when pressing these keys:
 let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
@@ -929,3 +956,9 @@ function ToggleColorscheme()
   endif
 endfunction
 nnoremap yot :call ToggleColorscheme()<CR>
+
+
+" Wow, just wow! Using :terminal now eh?
+tnoremap <Esc> <C-\><C-n>
+
+
