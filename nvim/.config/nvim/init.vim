@@ -118,7 +118,7 @@ set title " show filename on titlebar
 "" unhighlight on Enter
 "nnoremap <CR> :nohlsearch<CR> 
 " Repeat last macro if in a normal buffer. Thanks @wincent
-nnoremap <expr> <CR> empty(&buftype) ? '@@' : '<CR>'
+"nnoremap <expr> <CR> empty(&buftype) ? '@@' : '<CR>'
 noremap <silent> <Up> :cprevious<CR>
 nnoremap <silent> <Down> :cnext<CR>
 nnoremap <silent> <Left> :cpfile<CR>
